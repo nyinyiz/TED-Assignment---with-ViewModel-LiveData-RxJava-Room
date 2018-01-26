@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.project.padc.nyinyi.padctedtalks.components.SmartRecyclerView
+        android:id="@+id/rv_talks"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/margin_medium_2" />
+
+    <include
+        android:id="@+id/vp_empty_news"
+        layout="@layout/view_pod_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</RelativeLayout>
