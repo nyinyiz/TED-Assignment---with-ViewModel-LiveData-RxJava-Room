@@ -5,4 +5,5 @@
     <string name="appbar_title"><b>TED</b> Talks</string>
     <string name="action_settings">Setting</string>
     <string name="talk_des">Think we\'re winning the battle against HIV? Maybe not, as the next wave of drug-resistant viruses arrives. In an eye-opening talk, TED Fellow Edsel Salvana describes the aggressive HIV subtype AE that\'s currently plaguing his home of the Philippines -- and warns us about what might become a global epidemic.</string>
+    <string name="search_hint_text">Search TED Talks</string>
 </resources>

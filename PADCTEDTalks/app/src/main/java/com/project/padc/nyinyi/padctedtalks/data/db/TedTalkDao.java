@@ -2,10 +2,12 @@ package com.project.padc.nyinyi.padctedtalks.data.db;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 
+import com.project.padc.nyinyi.padctedtalks.data.vos.Result;
 import com.project.padc.nyinyi.padctedtalks.data.vos.TedPlaylistVO;
 import com.project.padc.nyinyi.padctedtalks.data.vos.TedPodcast;
 import com.project.padc.nyinyi.padctedtalks.data.vos.TedTalkVO;
@@ -33,15 +35,24 @@ public interface TedTalkDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     long[] insertTedPodCast(TedPodcast... tedPodcastsVOS);
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    long[] insertTedSearch(Result... resultsVO);
+
 
     @Query("SELECT * FROM "+ TedTalkConstants.TED_TALK_TABLE_NAME)
     LiveData<List<TedTalkVO>> getAllTedTalks();
+
+    @Query("SELECT * FROM "+ TedTalkConstants.TED_SEARCH_TABLE_NAME+" WHERE mTitle LIKE :searchValue OR mResultType LIKE :resultType" )
+    LiveData<List<Result>> getSearchDataByValue(String searchValue,String resultType);
 
     @Query("SELECT * FROM "+ TedTalkConstants.TED_TALK_TABLE_NAME+" WHERE mTalkId = :tedTalkId LIMIT 1" )
     TedTalkVO getTedTalksById(long tedTalkId);
 
     @Query("SELECT * FROM "+ TedTalkConstants.TED_PLAY_LIST_TABLE_NAME+" WHERE mPlaylistId = :tedPlayListId LIMIT 1" )
     TedPlaylistVO getTedPlayListById(long tedPlayListId);
+
+    @Query("SELECT * FROM "+ TedTalkConstants.TED_POD_CAST_TABLE_NAME+" WHERE mPodcastId = :tedPodCastId LIMIT 1" )
+    TedPodcast getTedPodCastById(long tedPodCastId);
 
     @Query("SELECT * FROM "+ TedTalkConstants.TED_PLAY_LIST_TABLE_NAME)
     LiveData<List<TedPlaylistVO>> getAllTedPlayList();
@@ -57,5 +68,9 @@ public interface TedTalkDao {
 
     @Query("DELETE FROM "+TedTalkConstants.TED_POD_CAST_TABLE_NAME)
     void deleteTedPodCast();
+
+    @Query("DELETE FROM "+TedTalkConstants.TED_SEARCH_TABLE_NAME)
+    void deleteTedSearch();
+
 
 }

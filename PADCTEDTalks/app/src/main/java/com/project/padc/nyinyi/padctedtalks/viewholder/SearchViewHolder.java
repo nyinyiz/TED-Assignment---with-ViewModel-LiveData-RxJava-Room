@@ -6,71 +6,55 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.project.padc.nyinyi.padctedtalks.R;
-import com.project.padc.nyinyi.padctedtalks.data.vos.TedTalkVO;
-import com.project.padc.nyinyi.padctedtalks.delegates.TedDelegates;
+import com.project.padc.nyinyi.padctedtalks.data.vos.Result;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * Created by user on 1/22/18.
+ * Created by user on 1/27/18.
  */
 
-public class TalksViewHolder extends BaseViewHolder<TedTalkVO> {
+public class SearchViewHolder extends BaseViewHolder<Result> {
 
-    @BindView(R.id.iv_talks_back_drop)
+    @BindView(R.id.iv_talks_in_play_list_back_drop)
     ImageView ivTalkBackDrop;
     @BindView(R.id.tv_talks_speaker)
     TextView tvTalksSpeaker;
     @BindView(R.id.tv_talks_title)
     TextView tvTalksTitle;
-    @BindView(R.id.tv_time_duration)
-    TextView tvTimeDuration;
 
-    private TedTalkVO mtedTalkVO;
-    private TedDelegates mDelegate;
+    private Result mResult;
 
-
-    public TalksViewHolder(View itemView,TedDelegates tedDelegates) {
+    public SearchViewHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this,itemView);
-        mDelegate = tedDelegates;
-        itemView.setOnClickListener(this);
-
     }
 
     @Override
-    public void setmData(TedTalkVO data) {
-
-        mtedTalkVO = data;
+    public void setmData(Result data) {
+        mResult = data;
     }
 
     @Override
     public void bind(Context context) {
-
         RequestOptions requestOptions = new RequestOptions();
         requestOptions.placeholder(R.drawable.place_holder_promotion);
         requestOptions.error(R.drawable.place_holder_promotion);
 
         Glide.with(context)
                 .setDefaultRequestOptions(requestOptions)
-                .load(mtedTalkVO.getImageUrl())
+                .load(mResult.getImageUrl())
                 .into(ivTalkBackDrop);
 
-        tvTalksSpeaker.setText(mtedTalkVO.getSpeaker().getName());
-        tvTalksTitle.setText(mtedTalkVO.getTitle());
-
-        long timeMin = mtedTalkVO.getDurationInSec() / 60 ;
-        long timeSec = mtedTalkVO.getDurationInSec() % 60 ;
-        tvTimeDuration.setText(timeMin +":"+timeSec);
-
+        tvTalksSpeaker.setText(mResult.getTitle());
+        tvTalksTitle.setText(mResult.getDescription());
     }
 
     @Override
     public void onClick(View v) {
-        mDelegate.onTapTedItem(mtedTalkVO);
+
     }
 }

@@ -24,8 +24,14 @@
         <activity
             android:name=".activities.TedTalkDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.TedPlaylistDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activities.TedPlaylistDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.PodCastDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar" ></activity>
     </application>
 
 </manifest>

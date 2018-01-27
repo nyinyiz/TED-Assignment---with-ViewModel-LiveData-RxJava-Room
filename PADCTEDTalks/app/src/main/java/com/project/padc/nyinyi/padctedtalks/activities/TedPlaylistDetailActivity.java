@@ -3,12 +3,16 @@ package com.project.padc.nyinyi.padctedtalks.activities;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -33,6 +37,8 @@ public class TedPlaylistDetailActivity extends BaseActivity implements TedTalksI
 
     private static final String TED_TALK_PLAY_LIST_ID = "tedTalkPlayListId";
 
+    @BindView(R.id.tool_bar)
+    Toolbar toolbar;
     @BindView(R.id.iv_talk_playlist_back_drop)
     ImageView ivTalkPlayListBackDrop;
     @BindView(R.id.iv_ted_talk_back_drop)
@@ -66,6 +72,15 @@ public class TedPlaylistDetailActivity extends BaseActivity implements TedTalksI
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ted_playlist_detail);
         ButterKnife.bind(this,this);
+        setSupportActionBar(toolbar);
+
+        ActionBar actionBar = getSupportActionBar();
+
+        if (toolbar != null) {
+            assert actionBar != null;
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
 
         mTedTalkPlayListId = getIntent().getStringExtra(TED_TALK_PLAY_LIST_ID);
 
@@ -86,16 +101,10 @@ public class TedPlaylistDetailActivity extends BaseActivity implements TedTalksI
         {
             Glide.with(this)
                     .load(mTedPlaylistVO.getImageUrl())
-                    .placeholder(R.drawable.place_holder_promotion)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivTedTalkBackDrop);
 
             Glide.with(this)
                     .load(mTedPlaylistVO.getImageUrl())
-                    .placeholder(R.drawable.place_holder_promotion)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivTalkPlayListBackDrop);
 
             tvTalkTitle.setText(mTedPlaylistVO.getTitle());
@@ -119,9 +128,22 @@ public class TedPlaylistDetailActivity extends BaseActivity implements TedTalksI
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void navigateToTedTalkDetailView(TalksInPlaylist tedTalkVO) {
+        Toast.makeText(this, tedTalkVO.getTalkId()+" Talk Id", Toast.LENGTH_SHORT).show();
         Intent intent = TedTalkDetailActivity.newIntent(getApplicationContext(),tedTalkVO.getTalkId()+"");
         startActivity(intent);
     }

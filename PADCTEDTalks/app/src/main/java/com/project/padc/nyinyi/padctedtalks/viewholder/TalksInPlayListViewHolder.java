@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.project.padc.nyinyi.padctedtalks.R;
 import com.project.padc.nyinyi.padctedtalks.data.vos.TalksInPlaylist;
 import com.project.padc.nyinyi.padctedtalks.data.vos.TedTalkVO;
@@ -50,11 +51,13 @@ public class TalksInPlayListViewHolder extends BaseViewHolder<TalksInPlaylist> {
     @Override
     public void bind(Context context) {
 
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions.placeholder(R.drawable.place_holder_promotion);
+        requestOptions.error(R.drawable.place_holder_promotion);
+
         Glide.with(context)
+                .setDefaultRequestOptions(requestOptions)
                 .load(mtedTalkVO.getImageUrl())
-                .placeholder(R.drawable.place_holder_promotion)
-                .centerCrop()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(ivTalkBackDrop);
 
         tvTalksSpeaker.setText(mtedTalkVO.getSpeaker().getName());

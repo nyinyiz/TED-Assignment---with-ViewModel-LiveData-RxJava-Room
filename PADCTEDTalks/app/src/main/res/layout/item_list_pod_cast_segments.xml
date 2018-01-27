@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_marginTop="@dimen/margin_medium_2">
+    <ImageView
+        android:id="@+id/iv_segment"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ted_radio_hour"
+        app:civ_border_width="2dp"
+        app:civ_border_color="#FF000000"
+        />
+    <TextView
+        android:id="@+id/tv_segment_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cathy O'Neil: Do Alogorithms Perpetuate Human Bias?"
+        android:textColor="@color/primary_text"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:textSize="@dimen/text_regular_2x"
+        android:layout_gravity="center_vertical"/>
+</LinearLayout>

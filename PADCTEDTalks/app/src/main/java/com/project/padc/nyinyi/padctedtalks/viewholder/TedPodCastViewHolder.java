@@ -7,8 +7,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.project.padc.nyinyi.padctedtalks.R;
 import com.project.padc.nyinyi.padctedtalks.data.vos.TedPodcast;
+import com.project.padc.nyinyi.padctedtalks.delegates.TedPodCastDelegates;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,11 +29,12 @@ public class TedPodCastViewHolder extends BaseViewHolder<TedPodcast> {
     TextView tvPodCastDes;
 
     private TedPodcast mTedPodcast;
+    private TedPodCastDelegates mDelegate;
 
-    public TedPodCastViewHolder(View itemView) {
+    public TedPodCastViewHolder(View itemView,TedPodCastDelegates delegates) {
         super(itemView);
         ButterKnife.bind(this,itemView);
-
+        mDelegate = delegates;
         itemView.setOnClickListener(this);
     }
 
@@ -45,11 +48,13 @@ public class TedPodCastViewHolder extends BaseViewHolder<TedPodcast> {
     public void bind(Context context) {
         if (mTedPodcast != null)
         {
+            RequestOptions requestOptions = new RequestOptions();
+            requestOptions.placeholder(R.drawable.place_holder_promotion);
+            requestOptions.error(R.drawable.place_holder_promotion);
+
             Glide.with(context)
+                    .setDefaultRequestOptions(requestOptions)
                     .load(mTedPodcast.getImageUrl())
-                    .placeholder(R.drawable.place_holder_promotion)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivPodCastBackDrop);
 
             tvPodCastTitle.setText(mTedPodcast.getTitle());
@@ -60,6 +65,6 @@ public class TedPodCastViewHolder extends BaseViewHolder<TedPodcast> {
 
     @Override
     public void onClick(View v) {
-
+        mDelegate.onTapTedItem(mTedPodcast);
     }
 }

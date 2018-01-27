@@ -11,11 +11,13 @@ import com.google.gson.Gson;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.project.padc.nyinyi.padctedtalks.TedTalksApp;
 import com.project.padc.nyinyi.padctedtalks.data.db.AppDatabase;
+import com.project.padc.nyinyi.padctedtalks.data.vos.Result;
 import com.project.padc.nyinyi.padctedtalks.data.vos.TedPlaylistVO;
 import com.project.padc.nyinyi.padctedtalks.data.vos.TedPodcast;
 import com.project.padc.nyinyi.padctedtalks.data.vos.TedTalkVO;
 import com.project.padc.nyinyi.padctedtalks.network.TedApi;
 import com.project.padc.nyinyi.padctedtalks.network.response.PlaylistResponse;
+import com.project.padc.nyinyi.padctedtalks.network.response.SearchResponse;
 import com.project.padc.nyinyi.padctedtalks.network.response.TalksResponse;
 import com.project.padc.nyinyi.padctedtalks.network.response.TedPodCastsResponse;
 import com.project.padc.nyinyi.padctedtalks.utils.TedConstants;
@@ -99,6 +101,20 @@ public class TedModel extends ViewModel {
                 });
     }
 
+    public void loadTedSearch() {
+        theApi.getTedSearch(TedConstants.ACCESS_TOKEN,TedConstants.PAGE)
+                .subscribeOn(Schedulers.io())//observer ka koe srr pyu ml data ko create lot py ml method yl thread
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<SearchResponse>() {
+                    @Override
+                    public void accept(SearchResponse searchResponse) throws Exception {
+                        mAppDatabase.tedTalksDao().deleteTedSearch();
+                        long[] insertedIds = mAppDatabase.tedTalksDao().insertTedSearch(searchResponse.getResults().toArray(new Result[0]));
+                        Log.d(TedTalksApp.TAG, "Total inserted count : " + insertedIds.length);
+                    }
+                });
+    }
+
 
     public void initDatabase(Context context) {
         mAppDatabase = AppDatabase.getInMemoryDatabase(context);
@@ -122,6 +138,15 @@ public class TedModel extends ViewModel {
 
     public TedPlaylistVO getTedPlayListByID(long tedPlayListId) {
         return mAppDatabase.tedTalksDao().getTedPlayListById(tedPlayListId);
+    }
+
+    public TedPodcast getTedPodCastByID(long tedPodCastId) {
+        return mAppDatabase.tedTalksDao().getTedPodCastById(tedPodCastId);
+    }
+
+    public LiveData<List<Result>> getSearchDataByValue(String searchValue,String resultType)
+    {
+        return mAppDatabase.tedTalksDao().getSearchDataByValue(searchValue,resultType);
     }
 
 

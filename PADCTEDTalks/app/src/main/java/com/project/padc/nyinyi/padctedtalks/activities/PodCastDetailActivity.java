@@ -1,14 +1,13 @@
 package com.project.padc.nyinyi.padctedtalks.activities;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
-import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -17,47 +16,52 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.project.padc.nyinyi.padctedtalks.R;
+import com.project.padc.nyinyi.padctedtalks.adapters.PodCastSegmentsRecyclerAdapter;
+import com.project.padc.nyinyi.padctedtalks.adapters.TalksInPlayListRecyclerAdapter;
 import com.project.padc.nyinyi.padctedtalks.data.models.TedModel;
-import com.project.padc.nyinyi.padctedtalks.data.vos.TedTalkVO;
-
-import java.util.List;
+import com.project.padc.nyinyi.padctedtalks.data.vos.TedPodcast;
+import com.project.padc.nyinyi.padctedtalks.mvp.views.TedPodCastView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TedTalkDetailActivity extends BaseActivity {
+public class PodCastDetailActivity extends BaseActivity {
 
-    private static final String TED_TALK_ID = "tedTalkId";
+
+    private static final String TED_TALK_POD_CAST_ID = "tedTalkPodcastId";
 
     @BindView(R.id.tool_bar)
     Toolbar toolbar;
     @BindView(R.id.iv_ted_talk_back_drop)
     ImageView ivTedTalkBackDrop;
-    @BindView(R.id.tv_talks_speaker)
-    TextView tvTalksSpeaker;
     @BindView(R.id.tv_talks_title)
     TextView tvTalkTitle;
     @BindView(R.id.tv_talk_des)
     TextView tvTalkDes;
     @BindView(R.id.tv_time_duration)
     TextView tvTimeDuration;
-
+    @BindView(R.id.rv_view)
+    RecyclerView rvView;
 
     private TedModel mTedModel;
-    private String mTedTalkId;
-    private TedTalkVO mTedTalkVO;
+    private String mTedTalkPodCastId;
+    private TedPodcast mTedPodcast;
 
-    public static Intent newIntent(Context context,String tedtalkId)
+    private PodCastSegmentsRecyclerAdapter adapter;
+
+    public static Intent newIntent(Context context, String tedtalkPodCastId)
     {
-        Intent intent = new Intent(context,TedTalkDetailActivity.class);
-        intent.putExtra(TED_TALK_ID,tedtalkId);
+        Intent intent = new Intent(context,PodCastDetailActivity.class);
+        intent.putExtra(TED_TALK_POD_CAST_ID,tedtalkPodCastId);
         return intent;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ted_talk_detail);
+        setContentView(R.layout.activity_pod_cast_detail);
         ButterKnife.bind(this,this);
+
         setSupportActionBar(toolbar);
 
         ActionBar actionBar = getSupportActionBar();
@@ -68,27 +72,31 @@ public class TedTalkDetailActivity extends BaseActivity {
             actionBar.setDisplayShowHomeEnabled(true);
         }
 
-        mTedTalkId = getIntent().getStringExtra(TED_TALK_ID);
+        mTedTalkPodCastId = getIntent().getStringExtra(TED_TALK_POD_CAST_ID);
+
+        rvView.setLayoutManager(new LinearLayoutManager(getApplicationContext(),
+                LinearLayoutManager.VERTICAL, false));
+        adapter = new PodCastSegmentsRecyclerAdapter(this);
+        rvView.setAdapter(adapter);
 
         mTedModel = ViewModelProviders.of(this).get(TedModel.class);
         mTedModel.initDatabase(getApplicationContext());
-        mTedTalkVO = mTedModel.getTedTalkByID(Long.parseLong(mTedTalkId));
+        mTedPodcast = mTedModel.getTedPodCastByID(Long.parseLong(mTedTalkPodCastId));
 
-        if (mTedTalkVO != null)
+        if (mTedPodcast != null)
         {
             Glide.with(this)
-                    .load(mTedTalkVO.getImageUrl())
+                    .load(mTedPodcast.getImageUrl())
                     .into(ivTedTalkBackDrop);
 
-            tvTalksSpeaker.setText(mTedTalkVO.getSpeaker().getName());
-            tvTalkTitle.setText(mTedTalkVO.getTitle());
-            tvTalkDes.setText(mTedTalkVO.getDescription());
+            tvTalkTitle.setText(mTedPodcast.getTitle());
+            tvTalkDes.setText(mTedPodcast.getDescription());
 
-            long timeMin = mTedTalkVO.getDurationInSec() / 60 ;
-            long timeSec = mTedTalkVO.getDurationInSec() % 60 ;
-            tvTimeDuration.setText(timeMin +":"+timeSec);
+            tvTimeDuration.setText(mTedPodcast.getSegments().size()+" segments");
+            adapter.setNewData(mTedPodcast.getSegments());
 
         }
+
     }
 
     @Override

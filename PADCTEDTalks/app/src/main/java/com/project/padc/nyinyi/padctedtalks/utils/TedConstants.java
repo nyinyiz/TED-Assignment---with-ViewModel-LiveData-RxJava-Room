@@ -13,6 +13,8 @@ public class TedConstants {
 
     public static final String API_POST_TED_POD_CAST = "getPodcasts.php";
 
+    public static final String API_POST_TED_SEARCH = "search.php";
+
 
     public static final String ACCESS_TOKEN = "b002c7e1a528b7cb460933fc2875e916";
     public static final String PAGE = "1";

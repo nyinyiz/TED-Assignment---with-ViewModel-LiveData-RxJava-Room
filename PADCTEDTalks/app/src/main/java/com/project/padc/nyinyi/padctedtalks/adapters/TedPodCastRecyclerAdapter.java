@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 
 import com.project.padc.nyinyi.padctedtalks.R;
 import com.project.padc.nyinyi.padctedtalks.data.vos.TedPodcast;
+import com.project.padc.nyinyi.padctedtalks.delegates.TedPodCastDelegates;
 import com.project.padc.nyinyi.padctedtalks.viewholder.TedPodCastViewHolder;
 
 /**
@@ -14,15 +15,17 @@ import com.project.padc.nyinyi.padctedtalks.viewholder.TedPodCastViewHolder;
 
 public class TedPodCastRecyclerAdapter extends BaseRecyclerAdapter<TedPodCastViewHolder,TedPodcast> {
 
+    private TedPodCastDelegates mDelegate;
 
-    public TedPodCastRecyclerAdapter(Context context) {
+    public TedPodCastRecyclerAdapter(Context context,TedPodCastDelegates delegates) {
         super(context);
+        mDelegate = delegates;
     }
 
     @Override
     public TedPodCastViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = mLayoutInflator.inflate(R.layout.item_list_pod_cast,parent,false);
-        TedPodCastViewHolder vh = new TedPodCastViewHolder(view);
+        TedPodCastViewHolder vh = new TedPodCastViewHolder(view,mDelegate);
         return vh;
     }
 

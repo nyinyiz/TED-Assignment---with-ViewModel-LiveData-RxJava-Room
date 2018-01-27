@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.project.padc.nyinyi.padctedtalks.R;
+import com.project.padc.nyinyi.padctedtalks.activities.PodCastDetailActivity;
+import com.project.padc.nyinyi.padctedtalks.activities.TedTalkDetailActivity;
 import com.project.padc.nyinyi.padctedtalks.adapters.TalksRecyclerAdapter;
 import com.project.padc.nyinyi.padctedtalks.adapters.TedPodCastRecyclerAdapter;
 import com.project.padc.nyinyi.padctedtalks.components.EmptyViewPod;
@@ -20,7 +23,9 @@ import com.project.padc.nyinyi.padctedtalks.components.SmartRecyclerView;
 import com.project.padc.nyinyi.padctedtalks.data.models.TedModel;
 import com.project.padc.nyinyi.padctedtalks.data.vos.TedPodcast;
 import com.project.padc.nyinyi.padctedtalks.data.vos.TedTalkVO;
+import com.project.padc.nyinyi.padctedtalks.mvp.presenters.TedPodCastPresenter;
 import com.project.padc.nyinyi.padctedtalks.mvp.presenters.TedTalksPresenter;
+import com.project.padc.nyinyi.padctedtalks.mvp.views.TedPodCastView;
 
 import java.util.List;
 
@@ -32,7 +37,7 @@ import butterknife.ButterKnife;
  */
 
 @SuppressLint("ValidFragment")
-public class TedPodCastFragment extends Fragment {
+public class TedPodCastFragment extends Fragment implements TedPodCastView {
 
     @BindView(R.id.rv_talks)
     SmartRecyclerView rvTalks;
@@ -44,6 +49,9 @@ public class TedPodCastFragment extends Fragment {
     private TedPodCastRecyclerAdapter adapter;
     private TedModel mTedModel;
 
+    private TedPodCastPresenter mTedPodCastPresenter;
+
+
     public TedPodCastFragment(Context context) {
         this.context = context;
     }
@@ -51,6 +59,8 @@ public class TedPodCastFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mTedPodCastPresenter = new TedPodCastPresenter();
+        mTedPodCastPresenter.onCreate(this);
 
     }
 
@@ -63,7 +73,7 @@ public class TedPodCastFragment extends Fragment {
         rvTalks.setEmptyView(vpEmptyNews);
         rvTalks.setLayoutManager(new LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false));
-        adapter = new TedPodCastRecyclerAdapter(getContext());
+        adapter = new TedPodCastRecyclerAdapter(getContext(),mTedPodCastPresenter);
         rvTalks.setAdapter(adapter);
 
         mTedModel = ViewModelProviders.of(this).get(TedModel.class);
@@ -77,5 +87,11 @@ public class TedPodCastFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void navigateToTedPodCastDetailView(TedPodcast tedPodcast) {
+        Intent intent = PodCastDetailActivity.newIntent(getContext(),tedPodcast.getPodcastId()+"");
+        context.startActivity(intent);
     }
 }
